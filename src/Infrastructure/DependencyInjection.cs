@@ -21,7 +21,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration) =>
+        IConfiguration configuration
+    ) =>
         services
             .AddServices()
             .AddDatabase(configuration)
@@ -38,44 +39,51 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddDatabase(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         string? connectionString = configuration.GetConnectionString("Database");
 
         services.AddDbContext<ApplicationDbContext>(
-            options => options
-                .UseNpgsql(connectionString, npgsqlOptions =>
-                    npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Default))
-                .UseSnakeCaseNamingConvention());
+            (sp, options) => options.UseSqlite(connectionString));
 
-        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IApplicationDbContext>(sp =>
+            sp.GetRequiredService<ApplicationDbContext>()
+        );
 
         return services;
     }
 
-    private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddHealthChecks(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        services
-            .AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("Database")!);
+        services.AddHealthChecks().AddNpgSql(configuration.GetConnectionString("Database")!);
 
         return services;
     }
 
     private static IServiceCollection AddAuthenticationInternal(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration
+    )
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)
+                    ),
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
 
@@ -95,7 +103,10 @@ public static class DependencyInjection
 
         services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-        services.AddTransient<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+        services.AddTransient<
+            IAuthorizationPolicyProvider,
+            PermissionAuthorizationPolicyProvider
+        >();
 
         return services;
     }
