@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:5000
+@token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+@todoId = 5
+@userId = "10-23-2024"
+
+### Complete Todo
+PUT {{baseUrl}}/todos/{{todoId}}/complete
+Authorization: Bearer {{token}}
+
+### Create Todo
+POST {{baseUrl}}/todos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "description": "Test todo",
+  "dueDate": "2025-06-30T00:00:00Z",
+  "labels": ["urgent", "work"],
+  "priority": 1
+}
+
+### Delete Todo
+DELETE {{baseUrl}}/todos/{{todoId}}
+Authorization: Bearer {{token}}
+
+### Get Todos
+GET {{baseUrl}}/todos?userId={{userId}}
+Authorization: Bearer {{token}}
+
+### Get Todo By Id
+GET {{baseUrl}}/todos/{{todoId}}
+Authorization: Bearer {{token}}

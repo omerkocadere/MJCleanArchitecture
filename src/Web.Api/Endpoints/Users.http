@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:5000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJkZXZlbG9wZXJzIiwiaXNzIjoiY2xlYW4tYXJjaGl0ZWN0dXJlIiwiZXhwIjoxNzUwNzU2MTc3LCJzdWIiOiJkNWNhYWEwYi0xMWU4LTQ2NTgtOWQxZi04MWEwZjQ5YjBhN2EiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTA3NTI1NzcsIm5iZiI6MTc1MDc1MjU3N30.-gB0em57YGfqia05HHWr4Of8MKic3xmO-PHleA0fZTU
+@userId = D5CAAA0B-11E8-4658-9D1F-81A0F49B0A7b
+
+
+### Get User By Id
+GET {{baseUrl}}/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### Login
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "string123"
+}
+
+### Register
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "password": "string123"
+}
