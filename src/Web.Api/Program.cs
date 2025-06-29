@@ -38,7 +38,7 @@ app.MapHealthChecks("health", new HealthCheckOptions
 
 app.UseRequestContextLogging();
 
-// app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
 
